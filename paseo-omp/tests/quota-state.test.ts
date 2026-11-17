@@ -5,11 +5,11 @@ import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import type { PluginServerContext } from "@getpaseo/plugin/server";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { providerIcon } from "../client/provider-brand";
 import {
   quotaDetailLabel,
   quotaProviderFromSession,
   quotaProviderGroups,
-  quotaProviderIconName,
   quotaRecordedLabel,
   quotaResetLabel,
   quotaSessionAccounts,
@@ -148,10 +148,24 @@ describe("session-specific quota selection", () => {
   });
 
   test("maps each provider to a distinct icon and severity bucket", () => {
-    expect(quotaProviderIconName("anthropic")).toBe("Asterisk");
-    expect(quotaProviderIconName("cursor")).toBe("MousePointer2");
-    expect(quotaProviderIconName("azure")).toBe("Cloud");
-    expect(quotaProviderIconName("unknown-vendor")).toBe("Gauge");
+    const brand = (provider: string) => providerIcon(provider) as { svg: string };
+    // Brand marks for the providers Paseo itself draws; same company, same mark.
+    expect(brand("anthropic").svg).toEqual(expect.any(String));
+    expect(brand("openai-codex")).toEqual(brand("openai"));
+    expect(brand("xai-oauth")).toEqual(brand("xai"));
+    expect(brand("antigravity-cli")).toEqual(brand("google-antigravity"));
+    expect(
+      new Set(
+        ["anthropic", "openai-codex", "github-copilot", "antigravity-cli", "xai-oauth"].map(
+          (provider) => brand(provider).svg,
+        ),
+      ).size,
+    ).toBe(5);
+    // Others keep the closest Lucide icon.
+    expect(providerIcon("cursor")).toBe("MousePointer2");
+    expect(providerIcon("azure")).toBe("Cloud");
+    expect(providerIcon("unknown-vendor")).toBe("Gauge");
+    expect(providerIcon(null)).toBe("Gauge");
     expect(quotaSeverityForProvider(quotas, "anthropic")).toBe("ok");
     expect(quotaSeverityForProvider(quotas, "cursor")).toBe("danger");
     expect(quotaSeverityForProvider(quotas, "azure")).toBe("unknown");

@@ -11,6 +11,7 @@ import {
   type OmpSessionAccount,
 } from "../shared/quota";
 import { ompStoreKey } from "./omp-store-state";
+import { providerIcon } from "./provider-brand";
 import {
   needsSessionModelProvider,
   type QuotaProviderGroup,
@@ -19,7 +20,6 @@ import {
   quotaDetailLabel,
   quotaProviderFromSession,
   quotaProviderGroups,
-  quotaProviderIconName,
   quotaProviderLabel,
   quotaSessionAccounts,
   quotaSeverityFromFraction,
@@ -444,7 +444,7 @@ export function QuotaPopover(props: PluginButtonContentProps) {
           <View key={group.provider} style={styles.group(current)}>
             <View style={styles.groupHeader}>
               <Icon
-                name={quotaProviderIconName(group.provider)}
+                icon={providerIcon(group.provider)}
                 size={16}
                 color={severityColor(group.severity)}
               />

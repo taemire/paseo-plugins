@@ -41,7 +41,8 @@ import {
 } from "./omp-accounts-state";
 import type { OmpConfigStyles } from "./omp-config-styles";
 import { ompStoreKey } from "./omp-store-state";
-import { quotaProviderIconName, quotaResetLabel, quotaSeverityFromFraction } from "./quota-state";
+import { providerIcon } from "./provider-brand";
+import { quotaResetLabel, quotaSeverityFromFraction } from "./quota-state";
 
 type Theme = PluginSurfaceProps["theme"];
 
@@ -211,11 +212,7 @@ function AccountCard({
               minWidth: 0,
             }}
           >
-            <Icon
-              name={quotaProviderIconName(account.provider)}
-              size={16}
-              color={theme.colors.foreground}
-            />
+            <Icon icon={providerIcon(account.provider)} size={16} color={theme.colors.foreground} />
             <Text numberOfLines={1} style={[styles.cardTitle, { flexShrink: 1 }]}>
               {account.label}
             </Text>
@@ -878,11 +875,7 @@ export function OmpAccountsSection({
       {groups.map(({ provider, accounts: logins }) => (
         <View key={provider.id} style={{ gap: 8 }}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <Icon
-              name={quotaProviderIconName(provider.id)}
-              size={18}
-              color={theme.colors.foreground}
-            />
+            <Icon icon={providerIcon(provider.id)} size={18} color={theme.colors.foreground} />
             <Text style={styles.cardTitle}>{provider.name}</Text>
           </View>
           {view?.balance
